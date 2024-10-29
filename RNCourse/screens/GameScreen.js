@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet, Alert, Text, FlatList } from "react-native";
+import { View, StyleSheet, Alert, FlatList, useWindowDimensions } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import Title from "../components/ui/Title";
 import NumberContainer from "../components/game/NumberContainer";
@@ -25,8 +25,8 @@ function GameScreen({ userChoice, onGameOver, roundsNumber, setRoundsNumber }) {
     const [opponentGuess, setOpponentGuess] = useState(
         generateRandomBetween(1, 100, userChoice)
     );
-
     const [guessedNumbers, setGuessedNumbers] = useState([opponentGuess]);
+    const { width, height } = useWindowDimensions();
 
     useEffect(() => {
         if (opponentGuess === userChoice) {
@@ -69,21 +69,52 @@ function GameScreen({ userChoice, onGameOver, roundsNumber, setRoundsNumber }) {
         setOpponentGuess(nextNumber);
     }
 
-    return (
-        <View style={styles.screen}>
-            <Title style={styles.title}>Opponent's Guess</Title>
+    let content = (
+        <>
             <NumberContainer>{opponentGuess}</NumberContainer>
             <Card>
                 <InstructionText style={styles.instructionText}>higher or lower?</InstructionText>
                 <View style={styles.buttonsContainer}>
-                    <PrimaryButton onPress={() => nextGuessHandler("lower")}>
-                        <Ionicons name="remove" size={24}/>
-                    </PrimaryButton>
-                    <PrimaryButton onPress={() => nextGuessHandler("greater")}>
-                        <Ionicons name="add" size={24}/>
-                    </PrimaryButton>
+                    <View style={styles.buttonContainer}>
+                        <PrimaryButton onPress={() => nextGuessHandler("lower")}>
+                            <Ionicons name="remove" size={24}/>
+                        </PrimaryButton>
+                    </View>
+                    <NumberContainer>{opponentGuess}</NumberContainer>
+                    <View style={styles.buttonContainer}>
+                        <PrimaryButton onPress={() => nextGuessHandler("greater")}>
+                            <Ionicons name="add" size={24}/>
+                        </PrimaryButton>
+                    </View>
                 </View>
             </Card>
+        </>
+    );
+
+    if (width > 600) {
+        content = (
+            <>
+                <View style={styles.buttonsContainerWide}>
+                    <View style={styles.buttonContainer}>
+                        <PrimaryButton onPress={() => nextGuessHandler("lower")}>
+                            <Ionicons name="remove" size={24}/>
+                        </PrimaryButton>
+                    </View>
+                    <NumberContainer>{opponentGuess}</NumberContainer>
+                    <View style={styles.buttonContainer}>
+                        <PrimaryButton onPress={() => nextGuessHandler("greater")}>
+                            <Ionicons name="add" size={24}/>
+                        </PrimaryButton>
+                    </View>
+                </View>
+            </>
+        );
+    }
+
+    return (
+        <View style={styles.screen}>
+            <Title style={styles.title}>Opponent's Guess</Title>
+            {content}
             <View style={styles.listContainer}>
                 {/* {guessedNumbers.map((number) => (<Text key={number}>{number}</Text>))} */}
                 <FlatList 
@@ -102,6 +133,7 @@ const styles = StyleSheet.create({
     screen: {
         flex: 1,
         padding: 24,
+        alignItems: 'center',
     },
     instructionText: {
         marginBottom: 16,
@@ -120,6 +152,16 @@ const styles = StyleSheet.create({
         justifyContent: "space-around",
         marginTop: 24,
         width: '100%'
+    },
+    buttonContainer: {
+        flex: 1
+    },
+    buttonsContainerWide: {
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-around",
+        marginTop: 24,
+        width: '60%'
     },
     listContainer: {
         flex: 1,

@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
     marginVertical: 4,
     borderRadius: 8,
     alignItems: 'center',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     flexDirection: 'row',
     elevation: 4,
     shadowColor: 'black',
