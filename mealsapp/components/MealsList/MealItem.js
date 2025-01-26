@@ -8,7 +8,7 @@ import {
     TouchableOpacity,
     Platform
 } from "react-native";
-import MealDetails from "./MealDetails";
+import MealDetails from "../MealDetails";
 
 function MealItem({ id, title, duration, complexity, affordability, imageUrl }) {
     const navigation = useNavigation();
